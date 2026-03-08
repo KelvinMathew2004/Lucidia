@@ -1,12 +1,17 @@
 import { motion } from "motion/react";
 import { Link } from "react-router";
-import { Sparkles, Headphones, Wind, ClipboardList } from "lucide-react";
+import { useState } from "react";
+import { Sparkles, Headphones, Wind, ClipboardList, Activity } from "lucide-react";
 import HoldToUnlockButton from "../components/home/HoldToUnlockButton";
 import MiniPlayer from "../components/shared/MiniPlayer";
 import { useAudioPlayer } from "../components/shared/AudioPlayerContext";
+import NeuralInterventionModal from "../components/shared/NeuralInterventionModal";
 
 export default function HomeScreen() {
   const { currentTrack } = useAudioPlayer();
+  const userName = localStorage.getItem("lucidia_userName") || "Robert";
+  const [interventionModalOpen, setInterventionModalOpen] = useState(false);
+
   const today = new Date().toLocaleDateString('en-US', { 
     weekday: 'long', 
     month: 'long', 
@@ -36,7 +41,7 @@ export default function HomeScreen() {
           Good Morning,
           <br />
           <span className="font-medium bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-400">
-            Lucy.
+            {userName}.
           </span>
         </h1>
         <p className="text-slate-400 font-light text-lg">
@@ -103,9 +108,20 @@ export default function HomeScreen() {
             <Sparkles className="w-3 h-3" />
             <span>Dream Bank</span>
           </Link>
+          <button 
+            onClick={() => setInterventionModalOpen(true)}
+            className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-colors text-red-400 hover:text-red-300 text-[10px] uppercase tracking-widest"
+          >
+            <Activity className="w-3 h-3" />
+            <span>Intervention</span>
+          </button>
         </div>
       </motion.div>
 
+      <NeuralInterventionModal 
+        isOpen={interventionModalOpen} 
+        onClose={() => setInterventionModalOpen(false)} 
+      />
       <MiniPlayer />
     </div>
   );

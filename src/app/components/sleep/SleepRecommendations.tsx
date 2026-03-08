@@ -60,7 +60,7 @@ export default function SleepRecommendations({ filter = "Day" }: SleepRecommenda
             bgDark: "bg-amber-950",
             bgLight: "bg-amber-700",
             icon: <Sparkles className="w-10 h-10 text-amber-300 absolute bottom-4 right-4 opacity-50" />,
-            route: "/check-in",
+            route: "/routine",
           },
         ]
       };

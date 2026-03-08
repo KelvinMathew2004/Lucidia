@@ -21,7 +21,7 @@ const SLIDE_DATA: SlideData[] = [
     id: "welcome",
     iconName: "Moon",
     iconColor: "text-indigo-300",
-    title: "Welcome to\nDreamSync",
+    title: "Welcome to\nLucidia",
     subtitle: "Your Sleep Companion",
     description: "Track your sleep, decode your dreams, and wake up feeling your best — every single morning.",
     gradient: "from-indigo-600/30 via-purple-600/20 to-transparent",
@@ -77,6 +77,16 @@ function SlideIcon({ name, colorClass }: { name: string; colorClass: string }) {
   return <Icon className={`w-10 h-10 ${colorClass}`} strokeWidth={1.5} />;
 }
 
+// Generate static stars once
+const STARS = Array.from({ length: 50 }).map((_, i) => ({
+  id: i,
+  top: `${Math.random() * 100}%`,
+  left: `${Math.random() * 100}%`,
+  size: Math.random() * 2 + 1,
+  opacity: Math.random() * 0.5 + 0.1,
+  delay: Math.random() * 5,
+}));
+
 export default function WelcomeScreen() {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -89,7 +99,7 @@ export default function WelcomeScreen() {
   const goNext = () => {
     if (isLast) {
       localStorage.setItem("dreamSync_onboarded", "true");
-      navigate("/check-in");
+      navigate("/setup");
     } else {
       setDirection(1);
       setCurrentSlide((prev) => prev + 1);
@@ -105,11 +115,38 @@ export default function WelcomeScreen() {
 
   const skip = () => {
     localStorage.setItem("dreamSync_onboarded", "true");
-    navigate("/check-in");
+    navigate("/setup");
   };
 
   return (
     <div className="flex flex-col h-full relative overflow-hidden bg-[#110d1f] text-slate-50">
+      {/* Stars Background */}
+      <div className="absolute inset-0 pointer-events-none -z-0">
+        {STARS.map((star) => (
+          <motion.div
+            key={star.id}
+            className="absolute bg-white rounded-full"
+            style={{
+              top: star.top,
+              left: star.left,
+              width: star.size,
+              height: star.size,
+              opacity: star.opacity,
+            }}
+            animate={{
+              opacity: [star.opacity, star.opacity * 2, star.opacity],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: star.delay,
+              ease: "easeInOut"
+            }}
+          />
+        ))}
+      </div>
+
       {/* Animated background gradient */}
       <motion.div
         key={slide.id + "-bg"}
@@ -117,7 +154,8 @@ export default function WelcomeScreen() {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.8 }}
-        className={`absolute inset-0 bg-gradient-to-b ${slide.gradient} -z-0 pointer-events-none`}
+        className={`absolute inset-0 bg-gradient-to-b ${slide.gradient} -z-0 pointer-events-none blur-[40px]`}
+        style={{ transform: 'translate3d(0,0,0)' }}
       />
 
       {/* Floating background orbs */}

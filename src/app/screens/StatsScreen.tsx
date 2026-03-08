@@ -132,7 +132,7 @@ export default function StatsScreen() {
             <Calendar className="w-5 h-5 text-purple-400" />
             <div className="flex-1">
               <span className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-slate-800'}`}>Total Nights Tracked</span>
-              <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Since you joined DreamSync</p>
+              <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Since you joined Lucidia</p>
             </div>
             <span className={`text-2xl font-black ${isDark ? 'text-purple-300' : 'text-purple-600'}`}>{totalNightsTracked}</span>
           </div>

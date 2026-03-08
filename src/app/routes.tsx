@@ -6,18 +6,9 @@ import DreamBankScreen from "./screens/DreamBankScreen";
 import SoundLibraryScreen from "./screens/SoundLibraryScreen";
 import BreathingScreen from "./screens/BreathingScreen";
 import RoutineScreen from "./screens/RoutineScreen";
-import MorningCheckInScreen from "./screens/MorningCheckInScreen";
+import BciSetupScreen from "./screens/BciSetupScreen";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import StatsScreen from "./screens/StatsScreen";
-
-const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000;
-
-function needsCheckIn(): boolean {
-  const last = localStorage.getItem("dreamSync_lastCheckIn");
-  if (!last) return true;
-  const elapsed = Date.now() - parseInt(last, 10);
-  return elapsed >= TWELVE_HOURS_MS;
-}
 
 export const router = createBrowserRouter([
   {
@@ -29,7 +20,8 @@ export const router = createBrowserRouter([
         loader: () => {
           const onboarded = localStorage.getItem("dreamSync_onboarded") === "true";
           if (!onboarded) return redirect("/welcome");
-          if (needsCheckIn()) return redirect("/check-in");
+          const setupComplete = localStorage.getItem("lucidia_setupComplete") === "true";
+          if (!setupComplete) return redirect("/setup");
           return redirect("/home");
         },
       },
@@ -40,7 +32,7 @@ export const router = createBrowserRouter([
       { path: "sounds", Component: SoundLibraryScreen },
       { path: "breathing", Component: BreathingScreen },
       { path: "routine", Component: RoutineScreen },
-      { path: "check-in", Component: MorningCheckInScreen },
+      { path: "setup", Component: BciSetupScreen },
       { path: "stats", Component: StatsScreen },
     ],
   },

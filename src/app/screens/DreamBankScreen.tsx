@@ -1,10 +1,11 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
-import { Sun, ChevronLeft, ChevronDown, Clock, X, Moon, Star, CalendarDays, Sparkles, Activity, FileText, CheckCircle2, AlertTriangle, Lightbulb } from "lucide-react";
+import { Sun, ChevronLeft, ChevronDown, Clock, X, Moon, Star, CalendarDays, Sparkles, Activity, FileText, CheckCircle2, AlertTriangle, Lightbulb, Eye, Hand, Wind } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useTheme } from "../components/shared/ThemeContext";
 import AIPersonalizedSummaryModal from "../components/sleep/AIPersonalizedSummaryModal";
 import MiniPlayer from "../components/shared/MiniPlayer";
+import NeuralInterventionModal from "../components/shared/NeuralInterventionModal";
 
 // --- DATA GENERATION ---
 type DayData = {
@@ -352,6 +353,19 @@ export default function DreamBankScreen() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isAISummaryOpen, setIsAISummaryOpen] = useState(false);
   const [bciExpanded, setBciExpanded] = useState(false);
+  const [interventionModalOpen, setInterventionModalOpen] = useState(false);
+  const [addedPhobias, setAddedPhobias] = useState<string[]>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("lucidia_addedPhobias");
+    if (saved) setAddedPhobias(JSON.parse(saved));
+  }, []);
+
+  const handleAddPhobia = (phobia: string) => {
+    const updated = [...addedPhobias, phobia];
+    setAddedPhobias(updated);
+    localStorage.setItem("lucidia_addedPhobias", JSON.stringify(updated));
+  };
 
   useEffect(() => {
     const t1 = setTimeout(() => setAnimationStage(1), 800);
@@ -786,6 +800,116 @@ export default function DreamBankScreen() {
                         </div>
                       </div>
                     </div>
+
+                    {/* Sensory Analysis & Phobia Detection */}
+                    {(() => {
+                      const phobiaOptions = [
+                        { id: "Claustrophobia (Visual Expansion)", sense: "Visual", icon: Eye, desc: "Neural patterns indicated spatial confinement distress. Suggest applying Visual Spatial Expansion to alter perceived room dimensions in future dreams." },
+                        { id: "Arachnophobia (Tactile Dampening)", sense: "Touch", icon: Hand, desc: "Phantom crawling sensations detected along with stress spikes. Suggest applying Tactile Dampening to neutralize these sensations." },
+                        { id: "Osmophobia (Olfactory Masking)", sense: "Smell", icon: Wind, desc: "Distressing olfactory hallucination markers observed. Suggest applying Scent Masking to replace odors with calming lavender triggers." }
+                      ];
+                      
+                      const selectedPhobia = phobiaOptions[selectedDay.date.getDate() % phobiaOptions.length];
+                      const Icon = selectedPhobia.icon;
+                      const hasAdded = addedPhobias.includes(selectedPhobia.id);
+
+                      return (
+                        <div className={`rounded-2xl p-4 border mt-1 ${isDark ? 'bg-indigo-900/20 border-indigo-500/30' : 'bg-indigo-50 border-indigo-200 shadow-sm'}`}>
+                          <div className="flex items-center gap-2 mb-2">
+                             <Icon className={`w-4 h-4 ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`} />
+                             <h4 className={`text-[11px] font-bold uppercase tracking-widest ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`}>Sensory Discomfort Detected</h4>
+                          </div>
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className={`text-[10px] px-2 py-0.5 rounded-md border ${isDark ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30' : 'bg-white text-indigo-600 border-indigo-200'}`}>
+                              Sense: {selectedPhobia.sense}
+                            </span>
+                            <span className={`text-[10px] px-2 py-0.5 rounded-md border ${isDark ? 'bg-red-500/10 text-red-300 border-red-500/20' : 'bg-white text-red-600 border-red-200'}`}>
+                              Trigger: {selectedPhobia.id.split(' ')[0]}
+                            </span>
+                          </div>
+                          <p className={`text-xs mb-4 leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+                            {selectedPhobia.desc}
+                          </p>
+                          <button
+                            onClick={() => handleAddPhobia(selectedPhobia.id)}
+                            disabled={hasAdded}
+                            className={`w-full py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                              hasAdded 
+                                ? (isDark ? 'bg-white/5 text-slate-400 cursor-not-allowed border border-white/5' : 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200') 
+                                : 'bg-indigo-500 text-white hover:bg-indigo-600 shadow-md shadow-indigo-500/20'
+                            }`}
+                          >
+                            {hasAdded ? (
+                              <><CheckCircle2 className="w-4 h-4" /> Added to Intervention Targets</>
+                            ) : (
+                              "Add to Intervention Targets"
+                            )}
+                          </button>
+                        </div>
+                      );
+                    })()}
+
+                    {/* Sensory Analysis & Phobia Detection */}
+                    {(() => {
+                      const phobiaOptions = [
+                        { id: "Claustrophobia (Visual Expansion)", sense: "Visual", icon: Eye, desc: "Neural patterns indicated spatial confinement distress. Suggest applying Visual Spatial Expansion to alter perceived room dimensions in future dreams." },
+                        { id: "Arachnophobia (Tactile Dampening)", sense: "Touch", icon: Hand, desc: "Phantom crawling sensations detected along with stress spikes. Suggest applying Tactile Dampening to neutralize these sensations." },
+                        { id: "Osmophobia (Olfactory Masking)", sense: "Smell", icon: Wind, desc: "Distressing olfactory hallucination markers observed. Suggest applying Scent Masking to replace odors with calming lavender triggers." }
+                      ];
+                      
+                      const selectedPhobia = phobiaOptions[selectedDay.date.getDate() % phobiaOptions.length];
+                      const Icon = selectedPhobia.icon;
+                      const hasAdded = addedPhobias.includes(selectedPhobia.id);
+
+                      return (
+                        <div className={`rounded-2xl p-4 border mt-1 ${isDark ? 'bg-indigo-900/20 border-indigo-500/30' : 'bg-indigo-50 border-indigo-200 shadow-sm'}`}>
+                          <div className="flex items-center gap-2 mb-2">
+                             <Icon className={`w-4 h-4 ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`} />
+                             <h4 className={`text-[11px] font-bold uppercase tracking-widest ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`}>Sensory Discomfort Detected</h4>
+                          </div>
+                          <div className="flex items-center gap-2 mb-3 mt-1 flex-wrap">
+                            <span className={`text-[10px] px-2 py-0.5 rounded-md border font-medium ${isDark ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30' : 'bg-white text-indigo-600 border-indigo-200'}`}>
+                              Sense: {selectedPhobia.sense}
+                            </span>
+                            <span className={`text-[10px] px-2 py-0.5 rounded-md border font-medium ${isDark ? 'bg-red-500/10 text-red-300 border-red-500/20' : 'bg-white text-red-600 border-red-200'}`}>
+                              Trigger: {selectedPhobia.id.split(' ')[0]}
+                            </span>
+                          </div>
+                          <p className={`text-xs mb-4 leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+                            {selectedPhobia.desc}
+                          </p>
+                          <button
+                            onClick={() => handleAddPhobia(selectedPhobia.id)}
+                            disabled={hasAdded}
+                            className={`w-full py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                              hasAdded 
+                                ? (isDark ? 'bg-white/5 text-slate-400 cursor-not-allowed border border-white/5' : 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200') 
+                                : 'bg-indigo-500 text-white hover:bg-indigo-600 shadow-md shadow-indigo-500/20'
+                            }`}
+                          >
+                            {hasAdded ? (
+                              <><CheckCircle2 className="w-4 h-4" /> Added to Intervention Targets</>
+                            ) : (
+                              "Add to Intervention Targets"
+                            )}
+                          </button>
+                        </div>
+                      );
+                    })()}
+
+                    {/* Active Intervention */}
+                    <motion.button
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setInterventionModalOpen(true)}
+                      className={`mt-2 w-full py-4 rounded-2xl border text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-md ${
+                        isDark 
+                          ? 'bg-red-500/10 border-red-500/20 text-red-400 hover:bg-red-500/20' 
+                          : 'bg-red-50 border-red-100 text-red-600 hover:bg-red-100'
+                      }`}
+                    >
+                      <AlertTriangle className="w-4 h-4" />
+                      Configure Medical Interventions
+                    </motion.button>
                   </motion.div>
                 ) : (
                   <motion.button
@@ -809,6 +933,11 @@ export default function DreamBankScreen() {
       <AIPersonalizedSummaryModal 
         isOpen={isAISummaryOpen} 
         onClose={() => setIsAISummaryOpen(false)} 
+      />
+      <NeuralInterventionModal 
+        isOpen={interventionModalOpen} 
+        onClose={() => setInterventionModalOpen(false)} 
+        triggerContext="dream_analysis" 
       />
       <MiniPlayer />
     </div>
