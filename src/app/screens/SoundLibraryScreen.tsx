@@ -86,10 +86,10 @@ export default function SoundLibraryScreen() {
       <div className={`absolute top-0 left-0 w-full h-96 bg-gradient-to-b opacity-60 -z-10 transition-colors duration-500 ${isDark ? 'from-indigo-900/30 to-transparent' : 'from-indigo-100 to-transparent'}`} />
 
       {/* Header */}
-      <div className={`px-5 pt-12 pb-3 sticky top-0 backdrop-blur-xl z-30 transition-colors duration-500 ${isDark ? 'bg-[#110d1f]/90' : 'bg-[#F4F2FA]/90'}`}>
+      <div className={`px-5 pt-12 pb-3 sticky top-0 backdrop-blur-xl z-30 transition-colors duration-500 ${isDark ? 'bg-[#110d1f]/60' : 'bg-[#F4F2FA]/60'}`}>
         <header className="flex items-center justify-between py-2 relative">
           <button
-            onClick={() => navigate("/home")}
+            onClick={() => navigate(-1)}
             className={`p-2 -ml-2 rounded-full transition-colors ${isDark ? 'hover:bg-white/10 text-slate-300' : 'hover:bg-slate-100 text-slate-700'}`}
           >
             <ChevronLeft className="w-6 h-6" strokeWidth={2.5} />

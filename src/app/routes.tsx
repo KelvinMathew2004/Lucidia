@@ -9,22 +9,17 @@ import RoutineScreen from "./screens/RoutineScreen";
 import BciSetupScreen from "./screens/BciSetupScreen";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import StatsScreen from "./screens/StatsScreen";
+import SensoryTopologyScreen from "./screens/SensoryTopologyScreen";
+import NeuralPlaybackScreen from "./screens/NeuralPlaybackScreen";
+import SensoryOverrideScreen from "./screens/SensoryOverrideScreen";
+import AdvancedAnalyticsScreen from "./screens/AdvancedAnalyticsScreen";
+import RealityAnchoringScreen from "./screens/RealityAnchoringScreen";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component: AppLayout,
+    element: <AppLayout />,
     children: [
-      {
-        index: true,
-        loader: () => {
-          const onboarded = localStorage.getItem("dreamSync_onboarded") === "true";
-          if (!onboarded) return redirect("/welcome");
-          const setupComplete = localStorage.getItem("lucidia_setupComplete") === "true";
-          if (!setupComplete) return redirect("/setup");
-          return redirect("/home");
-        },
-      },
       { path: "welcome", Component: WelcomeScreen },
       { path: "home", Component: HomeScreen },
       { path: "sleep", Component: SleepDataScreen },
@@ -34,6 +29,15 @@ export const router = createBrowserRouter([
       { path: "routine", Component: RoutineScreen },
       { path: "setup", Component: BciSetupScreen },
       { path: "stats", Component: StatsScreen },
+      { path: "sensory-topology", Component: SensoryTopologyScreen },
+      { path: "neural-playback", Component: NeuralPlaybackScreen },
+      { path: "sensory-override", Component: SensoryOverrideScreen },
+      { path: "advanced-analytics", Component: AdvancedAnalyticsScreen },
+      { path: "reality-anchoring", Component: RealityAnchoringScreen },
+      {
+        index: true,
+        loader: () => redirect("/welcome"),
+      },
     ],
   },
 ]);

@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { Link } from "react-router";
 import { useState } from "react";
-import { Sparkles, Headphones, Wind, ClipboardList, Activity } from "lucide-react";
+import { Sparkles, Headphones, Wind, ClipboardList, Activity, Radio } from "lucide-react";
 import HoldToUnlockButton from "../components/home/HoldToUnlockButton";
 import MiniPlayer from "../components/shared/MiniPlayer";
 import { useAudioPlayer } from "../components/shared/AudioPlayerContext";
@@ -19,7 +19,7 @@ export default function HomeScreen() {
   });
 
   return (
-    <div className="flex flex-col items-center justify-between h-full overflow-hidden pt-16 pb-6 px-6 relative">
+    <div className="flex flex-col items-center justify-between h-full overflow-hidden pt-12 pb-6 px-8 lg:px-12 relative">
       <style dangerouslySetInnerHTML={{ __html: `
         .hide-scroll::-webkit-scrollbar {
           display: none;
@@ -37,14 +37,14 @@ export default function HomeScreen() {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="w-full text-center space-y-2 z-10"
       >
-        <h1 className="text-5xl font-light tracking-tight text-white/90">
+        <h1 className="text-4xl lg:text-5xl font-light tracking-tight text-white/90">
           Good Morning,
           <br />
           <span className="font-medium bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-400">
             {userName}.
           </span>
         </h1>
-        <p className="text-slate-400 font-light text-lg">
+        <p className="text-slate-400 font-light text-base lg:text-lg">
           Hold to reveal your night.
         </p>
       </motion.div>
@@ -68,52 +68,56 @@ export default function HomeScreen() {
         <HoldToUnlockButton />
       </motion.div>
 
-      {/* Footer Nav */}
+      {/* Footer Nav - Horizontal layout for tablet */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8, duration: 1 }}
-        className={`flex flex-col items-center gap-3 z-10 w-full ${currentTrack ? 'mb-16' : ''}`}
+        className={`flex flex-col items-center gap-3 z-10 w-full max-w-5xl ${currentTrack ? 'mb-16' : ''}`}
       >
-        {/* Quick Action Row */}
-        <div className="flex items-center gap-2 w-full">
+        {/* Single row of all action buttons for tablet layout */}
+        <div className="flex flex-wrap items-center justify-center gap-2 w-full">
           <Link 
             to="/sounds"
-            className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-slate-400 hover:text-slate-300 text-[10px] uppercase tracking-widest"
+            className="flex-1 min-w-[140px] flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-slate-400 hover:text-slate-300 text-xs uppercase tracking-widest whitespace-nowrap"
           >
-            <Headphones className="w-3 h-3" />
+            <Headphones className="w-4 h-4 shrink-0" />
             <span>Sounds</span>
           </Link>
           <Link 
             to="/breathing"
-            className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-slate-400 hover:text-slate-300 text-[10px] uppercase tracking-widest"
+            className="flex-1 min-w-[140px] flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-slate-400 hover:text-slate-300 text-xs uppercase tracking-widest whitespace-nowrap"
           >
-            <Wind className="w-3 h-3" />
+            <Wind className="w-4 h-4 shrink-0" />
             <span>Breathe</span>
           </Link>
           <Link 
             to="/routine"
-            className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-slate-400 hover:text-slate-300 text-[10px] uppercase tracking-widest"
+            className="flex-1 min-w-[140px] flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-slate-400 hover:text-slate-300 text-xs uppercase tracking-widest whitespace-nowrap"
           >
-            <ClipboardList className="w-3 h-3" />
+            <ClipboardList className="w-4 h-4 shrink-0" />
             <span>Routine</span>
           </Link>
-        </div>
-
-        <div className="flex items-center gap-2 w-full">
           <Link 
             to="/dream-bank" 
-            className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-slate-400 hover:text-slate-300 text-[10px] uppercase tracking-widest"
+            className="flex-1 min-w-[140px] flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-slate-400 hover:text-slate-300 text-xs uppercase tracking-widest whitespace-nowrap"
           >
-            <Sparkles className="w-3 h-3" />
+            <Sparkles className="w-4 h-4 shrink-0" />
             <span>Dream Bank</span>
+          </Link>
+          <Link 
+            to="/advanced-analytics"
+            className="flex-1 min-w-[140px] flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 transition-colors text-purple-400 hover:text-purple-300 text-xs uppercase tracking-widest whitespace-nowrap"
+          >
+            <Radio className="w-4 h-4 shrink-0" />
+            <span>Analytics</span>
           </Link>
           <button 
             onClick={() => setInterventionModalOpen(true)}
-            className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-colors text-red-400 hover:text-red-300 text-[10px] uppercase tracking-widest"
+            className="flex-1 min-w-[140px] flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-colors text-red-400 hover:text-red-300 text-xs uppercase tracking-widest whitespace-nowrap"
           >
-            <Activity className="w-3 h-3" />
-            <span>Intervention</span>
+            <Activity className="w-4 h-4 shrink-0" />
+            <span>Intervene</span>
           </button>
         </div>
       </motion.div>

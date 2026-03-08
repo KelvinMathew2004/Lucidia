@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 
-export default function SpaceBackground() {
+export default function SpaceBackground({ isTransparent = false }: { isTransparent?: boolean }) {
   const [stars, setStars] = useState<Array<{ id: number; top: string; left: string; size: number; delay: number; duration: number }>>([]);
   const [shootingStars, setShootingStars] = useState<Array<{ id: number; topStart: string; leftStart: string; delay: number; duration: number; repeatDelay: number; width: number }>>([]);
 
@@ -31,7 +31,11 @@ export default function SpaceBackground() {
   }, []);
 
   return (
-    <div className="absolute inset-0 pointer-events-none w-full h-full bg-gradient-to-b from-[#1a1030] via-[#110d1f] to-[#0d0a18] overflow-hidden z-[-1]">
+    <div className={`absolute inset-0 pointer-events-none w-full h-full overflow-hidden z-[-1] transition-colors duration-1000 ${
+      isTransparent 
+        ? "bg-transparent" 
+        : "bg-gradient-to-b from-[#1a1030] via-[#110d1f] to-[#0d0a18]"
+    }`}>
       
       {/* Slow Moving Auroras / Glowing Lines */}
       <motion.div

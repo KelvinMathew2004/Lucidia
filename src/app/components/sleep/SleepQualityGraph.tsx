@@ -81,14 +81,15 @@ export default function SleepQualityGraph({ filter = "Day" }: SleepQualityGraphP
       <div className="flex-1 min-h-0 w-full mt-2 -ml-2">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart key={filter} data={data} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
-            <defs>
+            <defs key="defs">
               <linearGradient id="colorQuality" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#a855f7" stopOpacity={0.4} />
                 <stop offset="95%" stopColor="#ec4899" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} />
+            <CartesianGrid key="grid" strokeDasharray="3 3" vertical={false} stroke={isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} />
             <XAxis
+              key="xaxis"
               dataKey="time"
               axisLine={false}
               tickLine={false}
@@ -98,6 +99,7 @@ export default function SleepQualityGraph({ filter = "Day" }: SleepQualityGraphP
               minTickGap={20}
             />
             <YAxis
+              key="yaxis"
               axisLine={false}
               tickLine={false}
               tick={{ fill: isDark ? "#64748b" : "#94a3b8", fontSize: 11, fontWeight: 500 }}
@@ -106,6 +108,7 @@ export default function SleepQualityGraph({ filter = "Day" }: SleepQualityGraphP
               ticks={[0, 25, 50, 75, 100]}
             />
             <Tooltip
+              key="tooltip"
               content={({ active, payload, label }) => {
                 if (active && payload && payload.length) {
                   return (
@@ -123,6 +126,7 @@ export default function SleepQualityGraph({ filter = "Day" }: SleepQualityGraphP
               }}
             />
             <Area
+              key="area"
               type="monotone"
               dataKey="quality"
               stroke="#a855f7"

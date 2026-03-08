@@ -18,7 +18,7 @@ export default function TopNav({
   return (
     <header className="flex items-center justify-between z-20 py-2 relative">
       <button
-        onClick={onBack || (() => navigate("/home"))}
+        onClick={onBack || (() => navigate(-1))}
         className={`p-2 -ml-2 rounded-full transition-colors ${isDark ? 'hover:bg-white/10 active:bg-white/20 text-slate-300' : 'hover:bg-slate-100 active:bg-slate-200 text-slate-700'}`}
       >
         <ChevronLeft className="w-6 h-6" strokeWidth={2.5} />

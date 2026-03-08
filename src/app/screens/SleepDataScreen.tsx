@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "motion/react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Moon, Sun, Bookmark, BarChart3 } from "lucide-react";
 import { useTheme } from "../components/shared/ThemeContext";
@@ -10,33 +10,45 @@ import AIOverview from "../components/sleep/AIOverview";
 import SleepTimeSummary from "../components/sleep/SleepTimeSummary";
 import SleepQualityGraph from "../components/sleep/SleepQualityGraph";
 import SleepDetailBars from "../components/sleep/SleepDetailBars";
-import SleepTimelineChart from "../components/sleep/SleepTimelineChart";
 import HealthInsightsCard from "../components/sleep/HealthInsightsCard";
+import SleepTimelineChart from "../components/sleep/SleepTimelineChart";
 import SleepRecommendations from "../components/sleep/SleepRecommendations";
+import SleepSensoryReport from "../components/sleep/SleepSensoryReport";
+import SensoryBreakdownChart from "../components/sleep/SensoryBreakdownChart";
+import SensoryAnomalies from "../components/sleep/SensoryAnomalies";
+import SensoryTopology from "../components/dream/SensoryTopology";
+import SensoryInterventionCard from "../components/sleep/SensoryInterventionCard";
 
-type Tab = "AI Overview" | "Sleep Stats";
+type Tab = "AI Overview" | "Sleep Stats" | "Sensory Report";
 type TimeFilter = "Day" | "Week" | "Month";
 
 export default function SleepDataScreen() {
   const [activeTab, setActiveTab] = useState<Tab>("AI Overview");
   const [timeFilter, setTimeFilter] = useState<TimeFilter>("Day");
   const [isCapturing, setIsCapturing] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { isDark, toggleDark } = useTheme();
   const { currentTrack } = useAudioPlayer();
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo(0, 0);
+    }
+  }, [activeTab]);
 
   const handleCapture = () => {
     setIsCapturing(true);
     // After the shrink animation completes, navigate to the bank
     setTimeout(() => {
-      navigate("/dream-bank");
-    }, 1200);
+      navigate("/dream-bank", { state: { fromSave: true } });
+    }, 800);
   };
 
   return (
     <motion.div 
-      className={`flex flex-col h-full relative z-20 origin-center overflow-hidden transition-colors duration-500 ${isDark ? 'bg-[#110d1f] text-slate-50' : 'bg-[#f8f9fc] text-slate-800'}`}
-      initial={{ borderRadius: "0px", scale: 1, opacity: 1, backgroundColor: isDark ? "#110d1f" : "#f8f9fc" }}
+      className={`flex flex-col h-full relative z-20 origin-center overflow-hidden transition-colors duration-500 text-slate-50`}
+      initial={{ borderRadius: "0px", scale: 1, opacity: 1, backgroundColor: "transparent" }}
       animate={
         isCapturing 
           ? { 
@@ -91,7 +103,7 @@ export default function SleepDataScreen() {
           animate={{ opacity: isCapturing ? 0 : 0.5 }}
         />
 
-        <div className={`px-5 pt-12 pb-2 sticky top-0 backdrop-blur-xl z-30 transition-colors duration-500 ${isDark ? 'bg-[#110d1f]/90' : 'bg-[#F4F2FA]/90'}`}>
+        <div className={`px-5 pt-12 pb-2 sticky top-0 backdrop-blur-xl z-30 transition-colors duration-500 ${isDark ? 'bg-[#110d1f]/60' : 'bg-[#F4F2FA]/60'}`}>
           <TopNav 
             title="Sleep Synthesis" 
             onBack={() => navigate("/home")}
@@ -128,10 +140,10 @@ export default function SleepDataScreen() {
           
           {/* Main Tab Toggle */}
           <div 
-            className={`flex p-1.5 rounded-[1.25rem] mt-4 mb-2 transition-colors duration-500 ${isDark ? 'bg-zinc-800/50' : 'bg-slate-200/50'}`}
+            className={`flex p-1.5 rounded-[1.25rem] mt-4 mb-2 transition-colors duration-500 max-w-2xl mx-auto ${isDark ? 'bg-zinc-800/50' : 'bg-slate-200/50'}`}
             style={{ boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.05)' }}
           >
-            {(["AI Overview", "Sleep Stats"] as Tab[]).map((tab) => (
+            {(["AI Overview", "Sleep Stats", "Sensory Report"] as Tab[]).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -155,7 +167,7 @@ export default function SleepDataScreen() {
           </div>
         </div>
 
-        <div className="flex-1 px-5 pb-16 pt-4 overflow-y-auto custom-scroll z-20">
+        <div ref={scrollRef} className="flex-1 px-5 pb-16 pt-4 overflow-y-auto custom-scroll z-20">
           <AnimatePresence mode="wait">
             {activeTab === "AI Overview" ? (
               <motion.div
@@ -166,6 +178,21 @@ export default function SleepDataScreen() {
                 transition={{ duration: 0.4 }}
               >
                 <AIOverview />
+              </motion.div>
+            ) : activeTab === "Sensory Report" ? (
+              <motion.div
+                key="sensory-report"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.4 }}
+                className="space-y-6"
+              >
+                <SleepSensoryReport />
+                <SensoryTopology />
+                <SensoryBreakdownChart />
+                <SensoryAnomalies />
+                <SensoryInterventionCard />
               </motion.div>
             ) : (
               <motion.div

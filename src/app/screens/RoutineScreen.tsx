@@ -98,9 +98,9 @@ export default function RoutineScreen() {
       <div className={`absolute inset-0 -z-10 ${isDark ? 'bg-[#110d1f]' : 'bg-[#F4F2FA]'}`} />
 
       {/* Header */}
-      <div className={`px-5 pt-12 pb-2 sticky top-0 backdrop-blur-xl z-30 ${isDark ? 'bg-[#110d1f]/90' : 'bg-[#F4F2FA]/90'}`}>
+      <div className={`px-5 pt-12 pb-2 sticky top-0 backdrop-blur-xl z-30 ${isDark ? 'bg-[#110d1f]/60' : 'bg-[#F4F2FA]/60'}`}>
         <header className="flex items-center justify-between py-2 relative">
-          <button onClick={() => navigate("/home")} className={`p-2 -ml-2 rounded-full ${isDark ? 'hover:bg-white/10 text-slate-300' : 'hover:bg-slate-100 text-slate-700'}`}>
+          <button onClick={() => navigate(-1)} className={`p-2 -ml-2 rounded-full ${isDark ? 'hover:bg-white/10 text-slate-300' : 'hover:bg-slate-100 text-slate-700'}`}>
             <ChevronLeft className="w-6 h-6" strokeWidth={2.5} />
           </button>
           <span className={`text-base font-semibold tracking-wide absolute left-1/2 -translate-x-1/2 ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>
@@ -122,6 +122,7 @@ export default function RoutineScreen() {
                 strokeWidth="3"
                 strokeLinecap="round"
                 strokeDasharray="97.4"
+                initial={{ strokeDashoffset: 97.4 }}
                 animate={{ strokeDashoffset: 97.4 * (1 - progress) }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
               />

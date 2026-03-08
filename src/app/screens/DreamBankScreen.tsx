@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
-import { Sun, ChevronLeft, ChevronDown, Clock, X, Moon, Star, CalendarDays, Sparkles, Activity, FileText, CheckCircle2, AlertTriangle, Lightbulb, Eye, Hand, Wind } from "lucide-react";
-import { useNavigate } from "react-router";
+import { Sun, ChevronLeft, ChevronDown, Clock, X, Moon, Star, CalendarDays, Sparkles, Activity, FileText, CheckCircle2, AlertTriangle, Lightbulb, Eye, Hand, Wind, Brain } from "lucide-react";
+import { useNavigate, useLocation } from "react-router";
 import { useTheme } from "../components/shared/ThemeContext";
 import AIPersonalizedSummaryModal from "../components/sleep/AIPersonalizedSummaryModal";
 import MiniPlayer from "../components/shared/MiniPlayer";
@@ -347,10 +347,12 @@ const calendarData = generateCalendarData().reverse();
 
 export default function DreamBankScreen() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isFromSave = location.state?.fromSave;
   const { isDark, toggleDark } = useTheme();
-  const [animationStage, setAnimationStage] = useState(0);
+  const [animationStage, setAnimationStage] = useState(isFromSave ? 0 : 1);
   const [selectedDay, setSelectedDay] = useState<DayData | null>(null);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true); // Changed to true - auto-expand
   const [isAISummaryOpen, setIsAISummaryOpen] = useState(false);
   const [bciExpanded, setBciExpanded] = useState(false);
   const [interventionModalOpen, setInterventionModalOpen] = useState(false);
@@ -368,9 +370,11 @@ export default function DreamBankScreen() {
   };
 
   useEffect(() => {
-    const t1 = setTimeout(() => setAnimationStage(1), 800);
-    return () => clearTimeout(t1);
-  }, []);
+    if (isFromSave) {
+      const t1 = setTimeout(() => setAnimationStage(1), 2500);
+      return () => clearTimeout(t1);
+    }
+  }, [isFromSave]);
 
   const handleCloseModal = () => {
     setSelectedDay(null);
@@ -429,7 +433,7 @@ export default function DreamBankScreen() {
                           delay: slot.animationDelay,
                           ease: "easeInOut"
                         }}
-                        className={`relative w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all duration-300 ease-out
+                        className={`relative w-12 h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center transition-all duration-300 ease-out
                           ${isLatest && animationStage === 0 ? 'opacity-0' : ''}
                         `}
                         style={{
@@ -437,10 +441,10 @@ export default function DreamBankScreen() {
                           boxShadow: `0 0 8px 1px ${slot.glowColor}, inset -1px -1px 3px rgba(0,0,0,0.1), inset 1px 1px 3px rgba(255,255,255,0.15)`
                         }}
                       >
-                        <span className="relative z-10 text-white font-medium text-[11px] sm:text-xs"
+                        <span className={`relative z-10 font-bold text-sm lg:text-base ${isDark ? 'text-[#1a1025]' : 'text-white'}`}
                           style={{
                             textShadow: isDark 
-                              ? '0 1px 3px rgba(0,0,0,0.8), 0 0px 6px rgba(0,0,0,0.5)' 
+                              ? '0 1px 2px rgba(255,255,255,0.2)' 
                               : '0 1px 2px rgba(0,0,0,0.5), 0 0px 4px rgba(0,0,0,0.3)'
                           }}
                         >
@@ -469,9 +473,9 @@ export default function DreamBankScreen() {
           scrollbar-width: none;
         }
       `}} />
-      <header className={`flex items-center justify-between z-40 px-5 pt-12 pb-4 backdrop-blur-xl border-b absolute top-0 w-full transition-colors duration-500 ${isDark ? 'bg-[#110d1f]/90 border-white/5' : 'bg-[#F4F2FA]/90 border-slate-200'}`}>
+      <header className={`flex items-center justify-between z-40 px-6 lg:px-8 pt-10 lg:pt-12 pb-4 backdrop-blur-xl border-b absolute top-0 w-full transition-colors duration-500 ${isDark ? 'bg-[#110d1f]/60 border-white/5' : 'bg-[#F4F2FA]/60 border-slate-200'}`}>
         <button
-          onClick={() => navigate("/sleep")}
+          onClick={() => navigate(-1)}
           className={`p-2 -ml-2 rounded-full transition-colors ${isDark ? 'hover:bg-white/10 text-slate-300' : 'hover:bg-slate-200 text-slate-600'}`}
         >
           <ChevronLeft className="w-6 h-6" strokeWidth={2.5} />
@@ -502,27 +506,30 @@ export default function DreamBankScreen() {
       </header>
 
       <div 
-        className="flex-1 relative overflow-y-auto overflow-x-hidden hide-scroll px-3 pb-24 pt-24"
-        style={{
-          maskImage: "linear-gradient(to bottom, transparent, black 8%, black 92%, transparent)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent, black 8%, black 92%, transparent)"
-        }}
+        className="flex-1 relative overflow-y-auto hide-scroll px-3 pb-24 pt-36"
       >
         <AnimatePresence>
           {animationStage === 0 && (
             <motion.div
-              initial={{ left: "50%", top: "80%", x: "-50%", y: "-50%", scale: 1.5, opacity: 1 }}
+              initial={{ scale: 3, opacity: 1 }}
               animate={{ 
-                left: ["50%", "30%", "70%", "85%"], 
-                top: ["80%", "50%", "30%", "15%"], 
-                x: "-50%", y: "-50%",
-                scale: [1.5, 1.2, 1, 1],
-                opacity: [1, 1, 1, 0] 
+                scale: [3, 1.5, 1, 0.5],
+                opacity: [1, 1, 0.8, 0]
               }}
-              transition={{ duration: 2.5, ease: "easeInOut", times: [0, 0.3, 0.6, 1] }}
-              className="fixed z-[100] w-9 h-9 sm:w-11 sm:h-11 rounded-full shadow-[0_0_16px_2px_rgba(168,85,247,0.5),inset_-1px_-1px_3px_rgba(0,0,0,0.1),inset_1px_1px_3px_rgba(255,255,255,0.15)] pointer-events-none flex items-center justify-center"
+              transition={{ duration: 2, ease: "easeInOut" }}
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] w-16 h-16 rounded-full shadow-[0_0_30px_8px_rgba(168,85,247,0.8)] pointer-events-none flex items-center justify-center"
               style={{
-                background: (calendarData[0].slots.filter(s => !s.isEmpty).pop() as DayData)?.meshGradient || 'radial-gradient(circle, #a855f7, #c084fc)'
+                background: (calendarData[0].slots.filter(s => !s.isEmpty).pop() as DayData)?.meshGradient || 'radial-gradient(circle, #a855f7, #c084fc)',
+                aspectRatio: '1 / 1'
+              }}
+              onAnimationComplete={() => {
+                // Scroll to today's entry after animation
+                setTimeout(() => {
+                  const todayElement = document.getElementById('today-entry');
+                  if (todayElement) {
+                    todayElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }
+                }, 100);
               }}
             >
             </motion.div>
@@ -689,10 +696,10 @@ export default function DreamBankScreen() {
                     <div className={`rounded-2xl p-4 border mt-1 ${isDark ? 'bg-black/40 border-white/5' : 'bg-slate-50/80 border-slate-200 shadow-sm'}`}>
                       <div className="flex items-center gap-2 mb-2">
                         <Activity className={`w-4 h-4 ${isDark ? 'text-slate-400' : 'text-slate-500'}`} />
-                        <h4 className={`text-[11px] font-bold uppercase tracking-widest ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Biometrics</h4>
+                        <h4 className={`text-[11px] font-bold uppercase tracking-widest ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Sleep Summary</h4>
                       </div>
                       <p className={`text-sm leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                        {selectedDay.aiData?.metrics || "Analyzing biometrics..."}
+                        {selectedDay.aiData?.summary || "Analyzing sleep patterns..."}
                       </p>
                     </div>
 
@@ -708,6 +715,20 @@ export default function DreamBankScreen() {
                         {selectedDay.aiData?.relationshipAdvice || "Preparing personalized action plan..."}
                       </p>
                     </div>
+
+                    {/* View Full Sleep Synthesis Button */}
+                    <motion.button
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => navigate("/sleep")}
+                      className={`mt-2 w-full py-4 rounded-2xl border text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-md ${
+                        isDark 
+                          ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/20' 
+                          : 'bg-indigo-50 border-indigo-100 text-indigo-600 hover:bg-indigo-100'
+                      }`}
+                    >
+                      <FileText className="w-4 h-4" />
+                      View Complete Sleep Synthesis
+                    </motion.button>
 
                     {/* Section 4: Daily BCI Context */}
                     <div className={`rounded-2xl border mt-1 overflow-hidden ${isDark ? 'bg-black/40 border-white/5' : 'bg-slate-50/80 border-slate-200 shadow-sm'}`}>
@@ -819,54 +840,6 @@ export default function DreamBankScreen() {
                              <Icon className={`w-4 h-4 ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`} />
                              <h4 className={`text-[11px] font-bold uppercase tracking-widest ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`}>Sensory Discomfort Detected</h4>
                           </div>
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className={`text-[10px] px-2 py-0.5 rounded-md border ${isDark ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30' : 'bg-white text-indigo-600 border-indigo-200'}`}>
-                              Sense: {selectedPhobia.sense}
-                            </span>
-                            <span className={`text-[10px] px-2 py-0.5 rounded-md border ${isDark ? 'bg-red-500/10 text-red-300 border-red-500/20' : 'bg-white text-red-600 border-red-200'}`}>
-                              Trigger: {selectedPhobia.id.split(' ')[0]}
-                            </span>
-                          </div>
-                          <p className={`text-xs mb-4 leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                            {selectedPhobia.desc}
-                          </p>
-                          <button
-                            onClick={() => handleAddPhobia(selectedPhobia.id)}
-                            disabled={hasAdded}
-                            className={`w-full py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
-                              hasAdded 
-                                ? (isDark ? 'bg-white/5 text-slate-400 cursor-not-allowed border border-white/5' : 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200') 
-                                : 'bg-indigo-500 text-white hover:bg-indigo-600 shadow-md shadow-indigo-500/20'
-                            }`}
-                          >
-                            {hasAdded ? (
-                              <><CheckCircle2 className="w-4 h-4" /> Added to Intervention Targets</>
-                            ) : (
-                              "Add to Intervention Targets"
-                            )}
-                          </button>
-                        </div>
-                      );
-                    })()}
-
-                    {/* Sensory Analysis & Phobia Detection */}
-                    {(() => {
-                      const phobiaOptions = [
-                        { id: "Claustrophobia (Visual Expansion)", sense: "Visual", icon: Eye, desc: "Neural patterns indicated spatial confinement distress. Suggest applying Visual Spatial Expansion to alter perceived room dimensions in future dreams." },
-                        { id: "Arachnophobia (Tactile Dampening)", sense: "Touch", icon: Hand, desc: "Phantom crawling sensations detected along with stress spikes. Suggest applying Tactile Dampening to neutralize these sensations." },
-                        { id: "Osmophobia (Olfactory Masking)", sense: "Smell", icon: Wind, desc: "Distressing olfactory hallucination markers observed. Suggest applying Scent Masking to replace odors with calming lavender triggers." }
-                      ];
-                      
-                      const selectedPhobia = phobiaOptions[selectedDay.date.getDate() % phobiaOptions.length];
-                      const Icon = selectedPhobia.icon;
-                      const hasAdded = addedPhobias.includes(selectedPhobia.id);
-
-                      return (
-                        <div className={`rounded-2xl p-4 border mt-1 ${isDark ? 'bg-indigo-900/20 border-indigo-500/30' : 'bg-indigo-50 border-indigo-200 shadow-sm'}`}>
-                          <div className="flex items-center gap-2 mb-2">
-                             <Icon className={`w-4 h-4 ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`} />
-                             <h4 className={`text-[11px] font-bold uppercase tracking-widest ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`}>Sensory Discomfort Detected</h4>
-                          </div>
                           <div className="flex items-center gap-2 mb-3 mt-1 flex-wrap">
                             <span className={`text-[10px] px-2 py-0.5 rounded-md border font-medium ${isDark ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30' : 'bg-white text-indigo-600 border-indigo-200'}`}>
                               Sense: {selectedPhobia.sense}
@@ -896,6 +869,20 @@ export default function DreamBankScreen() {
                         </div>
                       );
                     })()}
+
+                    {/* View Sensory Topology Button */}
+                    <motion.button
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => navigate("/sensory-topology")}
+                      className={`mt-2 w-full py-4 rounded-2xl border text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-md ${
+                        isDark 
+                          ? 'bg-purple-500/10 border-purple-500/20 text-purple-400 hover:bg-purple-500/20' 
+                          : 'bg-purple-50 border-purple-100 text-purple-600 hover:bg-purple-100'
+                      }`}
+                    >
+                      <Brain className="w-4 h-4" />
+                      View Sensory Topology
+                    </motion.button>
 
                     {/* Active Intervention */}
                     <motion.button

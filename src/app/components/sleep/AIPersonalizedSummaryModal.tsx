@@ -83,14 +83,14 @@ export default function AIPersonalizedSummaryModal({ isOpen, onClose }: AIPerson
             `}} />
 
             {/* Title Section */}
-            <motion.div 
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: stage >= 1 ? 1 : 0, y: stage >= 1 ? 0 : 15 }}
-              transition={{ duration: 0.6 }}
-              className="mt-2 mb-10"
+            <motion.div
+              className="text-left mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
             >
               <h1 className="text-3xl sm:text-4xl font-light text-white leading-tight">
-                Lucy, here are your <br/>
+                {localStorage.getItem("lucidia_userName") || "There"}, here are your <br/>
                 <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">
                   personalized recommendations.
                 </span>
