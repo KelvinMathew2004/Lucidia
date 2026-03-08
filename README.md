@@ -2,7 +2,7 @@
 
 **A Speculative Brain-Computer Interface (BCI) App for Sensory Dream Interventions**
 
-*Hackathon Submission: Sensory Experience Tool*
+*FigBuild 2026 Hackathon Submission: Sensory Experience Tool*
 
 Lucidia is a revolutionary, Apple-inspired mobile application that acts as the control center for next-generation Brain-Computer Interfaces (BCI) like *NeuroLink* and *Cortical Sync*. It goes beyond standard sleep tracking by bridging the gap between the conscious and unconscious mind. Lucidia tracks, visualizes, and directly manipulates the user's sensory experiences while they sleep—specifically targeting dreams to treat phobias, resolve trauma, and optimize cognitive restoration through an advanced 8-sense neural mapping system.
 
